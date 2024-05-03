@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetadatoResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Documientos-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135.documientos.boundary.rest</a> &gt; <span class="el_source">MetadatoResource.java</span></div><h1>MetadatoResource.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package sv.edu.ues.occ.ingenieria.tpi135.documientos.boundary.rest;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import static java.awt.SystemColor.info;
+import java.io.Serializable;
+import java.net.URI;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.Control.AtributoBean;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.Control.DocumentoBean;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.Control.MetadatoBean;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.Control.TaxonomiaBean;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.entity.Atributo;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.entity.Documento;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.entity.Metadato;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.entity.Taxonomia;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.entity.TipoDocumento;
+
+/**
+ *
+ * @author alexo
+ */
+@Path(&quot;/documento/{idDocumento}/metadato&quot;)
+<span class="nc" id="L45">public class MetadatoResource {</span>
+
+    @Inject
+    MetadatoBean metadatoBean;
+
+    @Inject
+    DocumentoBean documentoBean;
+
+    @Inject
+    AtributoBean atributoBean;
+
+    @Inject
+    TaxonomiaBean taxonomiaBean;
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createMetadato(@PathParam(&quot;idDocumento&quot;) Long idDocumento, Metadato metadato, @Context UriInfo info) {
+        // Verificar si el ID del documento y el objeto metadato son nulos
+        // Verificar que se proporcionó un documento válido
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (idDocumento == null) {</span>
+<span class="nc" id="L66">            return Response.status(Response.Status.BAD_REQUEST)</span>
+<span class="nc" id="L67">                    .entity(&quot;ID de documento inválido&quot;)</span>
+<span class="nc" id="L68">                    .build();</span>
+        }
+
+        // Verificar que se proporcionó un metadato válido
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (metadato == null) {</span>
+<span class="nc" id="L73">            return Response.status(Response.Status.BAD_REQUEST)</span>
+<span class="nc" id="L74">                    .entity(&quot;Metadato inválido&quot;)</span>
+<span class="nc" id="L75">                    .build();</span>
+        }
+
+        // Verificar que el documento existe
+<span class="nc" id="L79">        Documento documento = documentoBean.findById(idDocumento);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (documento == null) {</span>
+<span class="nc" id="L81">            return Response.status(Response.Status.NOT_FOUND)</span>
+<span class="nc" id="L82">                    .entity(&quot;Documento no encontrado&quot;)</span>
+<span class="nc" id="L83">                    .build();</span>
+        }
+
+        // Verificar que el atributo del metadato existe
+<span class="nc" id="L87">        Atributo atributo = atributoBean.findById(metadato.getIdAtributo());</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (atributo == null) {</span>
+<span class="nc" id="L89">            return Response.status(Response.Status.NOT_FOUND)</span>
+<span class="nc" id="L90">                    .entity(&quot;Atributo no encontrado&quot;)</span>
+<span class="nc" id="L91">                    .build();</span>
+        }
+
+        // Verificar que el atributo pertenece al documento
+<span class="nc" id="L95">        Taxonomia taxonomia = taxonomiaBean.findByDocumentoAndAtributo(idDocumento, metadato.getIdAtributo().getIdAtributo());</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (taxonomia == null) {</span>
+<span class="nc" id="L97">            return Response.status(Response.Status.BAD_REQUEST)</span>
+<span class="nc" id="L98">                    .entity(&quot;El atributo no pertenece al documento&quot;)</span>
+<span class="nc" id="L99">                    .build();</span>
+        }
+        try {
+<span class="nc" id="L102">            metadato.setIdDocumento(documento);</span>
+<span class="nc" id="L103">            metadatoBean.create(metadato);</span>
+
+            // Construir la URI de la respuesta y devolver la respuesta
+<span class="nc" id="L106">            URI requestUri = info.getRequestUri();</span>
+<span class="nc" id="L107">            String location = requestUri.toString() + &quot;/&quot; + metadato.getIdMetadata();</span>
+<span class="nc" id="L108">            return Response.status(Response.Status.CREATED)</span>
+<span class="nc" id="L109">                    .header(&quot;Location&quot;, location)</span>
+<span class="nc" id="L110">                    .entity(&quot;Metadato creado exitosamente&quot;)</span>
+<span class="nc" id="L111">                    .build();</span>
+<span class="nc" id="L112">        } catch (Exception ex) {</span>
+<span class="nc" id="L113">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);</span>
+            // En caso de error interno del servidor, devolver una respuesta con el estado 500
+<span class="nc" id="L115">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L116">                    .header(RestResourceHeaderPattern.DETALLE_PARAMETRO_EQUIVOCADO, &quot;Error interno del servidor&quot;)</span>
+<span class="nc" id="L117">                    .build();</span>
+        }
+
+        // Crear el metadato
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

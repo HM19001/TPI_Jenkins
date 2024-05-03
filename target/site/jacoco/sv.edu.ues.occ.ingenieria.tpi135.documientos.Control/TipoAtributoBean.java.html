@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TipoAtributoBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Documientos-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135.documientos.Control</a> &gt; <span class="el_source">TipoAtributoBean.java</span></div><h1>TipoAtributoBean.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package sv.edu.ues.occ.ingenieria.tpi135.documientos.Control;
+
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi135.documientos.entity.TipoAtributo;
+
+/**
+ *
+ * @author home
+ */
+@Stateless
+@LocalBean
+public class TipoAtributoBean extends AbstractDataAccess&lt;TipoAtributo&gt; implements Serializable {
+
+    @PersistenceContext(unitName = &quot;documientos-PU&quot;)
+    public EntityManager em;
+
+    @Override
+    public EntityManager getEntityManager() {
+<span class="nc" id="L30">        return em;</span>
+    }
+
+    public TipoAtributoBean() {
+<span class="nc" id="L34">        super(TipoAtributo.class);</span>
+<span class="nc" id="L35">    }</span>
+
+    public void crear(TipoAtributo registro) throws IllegalStateException, IllegalArgumentException {
+
+        try {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (em != null) {</span>
+<span class="nc" id="L41">                em.persist(registro);</span>
+<span class="nc" id="L42">                return;</span>
+            }
+<span class="nc" id="L44">        } catch (Exception ex) {</span>
+<span class="nc" id="L45">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);</span>
+<span class="nc" id="L46">        }</span>
+<span class="nc" id="L47">        throw new IllegalStateException();</span>
+
+    }
+
+    public Integer obtenerNuevoId() {
+        // Consulta para obtener el máximo ID de TipoAtributo
+<span class="nc" id="L53">        Query query = em.createQuery(&quot;SELECT MAX(t.idTipoAtributo) FROM TipoAtributo t&quot;);</span>
+<span class="nc" id="L54">        Integer maxId = (Integer) query.getSingleResult();</span>
+
+        // Si no hay registros en la tabla, asignamos el primer ID como 1
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (maxId == null) {</span>
+<span class="nc" id="L58">            return 1;</span>
+        }
+
+        // Devolvemos el máximo ID incrementado en 1 para garantizar un nuevo ID único
+<span class="nc" id="L62">        return maxId + 1;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
